@@ -1,0 +1,123 @@
+link_to_new_page:
+  new_report: Новый отчёт
+  register_reports: Реестр отчётов
+  sign_out: Выйти
+  sign_in: Войти
+
+title_block:
+  login_in_evo: Вход в Evo
+  login_in_redmine: Вход в Redmine
+  filter_tasks: Фильтр задач
+  labor_filter: Фильтр трудозатрат
+
+button:
+  sign_in: Войти
+  forgot_your_password:  Забыли пароль
+  save: Сохранить
+  close: Закрыть
+  export_in_excel: Экспортировать в Excel
+  apply_filter: Применить фильтр по задачам
+  reset_filter: Сбросить фильтр по задачам
+  generate_report: Сформировать отчёт
+  select_all_statuses: Выбрать все статусы
+  clear_statuses: Сбросить статусы
+  apply: Применить
+
+input:
+  remember_me: Запомнить меня
+
+label:
+  forgo_you_password_popup: Для восстановления пароля необходимо перейти в систему
+
+table_filter_task:
+  column_heading:
+    number: Номер
+    name: Название
+    status: Статус
+  add_info:
+    not_existent_issue_from_redmine: Задача в Evo без номера из Redmine
+
+title_page:
+  authorization_evo: Авторизация в Evo
+  authorization_redmine: Авторизация в Redmine
+  report: Отчёт
+  register: Реестр
+  select_report: Выбранный отчёn
+  generating_report: Формирование отчёта
+
+month:
+  January: Январь
+  February: Февраль
+  March: Март
+  April: Апрель
+  May: Май
+  June: Июнь
+  July: Июль
+  August: Август
+  September: Сентябрь
+  October: Октябрь
+  November: Ноябрь
+  December: Декабрь
+
+report:
+  project_evo: Проект Evo
+  project_redmine: Проект Redmine
+  period: Период
+  statuses: Статусы
+  created_at: Дата создания
+  task_number: Номер задачи/подзадачи
+  task_thema: Тема
+  task_status: Статус
+  evo: Evo
+  rm: Rm
+  evoTotalSpend: Затраты за все время Evo
+  redmineTotalSpend: Затраты за все время Rm
+  evoFilterSpend: Затраты за период Evo
+  redmineFilterSpend: Затраты за период Rm
+  redmineEstimate: Оценка из Rm
+  number: № отчета
+  manager: Менеджер
+  email_manager: Email менеджера
+  success_save: Отчет успешно сохранен в реестр
+  total_result: Общие итоги
+
+error:
+  evo:
+    not_found_project: Проект не найден в Evo
+    wrong_data_login: Недействительные аутентификационные данные.
+    unknown_project: Ни в одной из данных задач нет отмеченного проекта для Evo - %idsIssues%
+    not_found_custom_field: У вас нет прав для просмотра кастомных полей в задачах redmine
+    update_data_login: Обновите аутентификационные данные
+  redmine:
+    wrong_data_login: Недействительные аутентификационные данные.
+    update_data_login: Обновите аутентификационные данные
+    found_projects_with_same_id: Найдены проекта с одинаковым идентификатором
+    not_found_status: Не найден статус из Redmine
+    not_found_project: Проект не найден в Redmine
+    bad_request: Отправлен плохой запрос в redmine. Оповестите администратора
+  report:
+    not_found: Отчет не найден
+
+sort:
+  asc: По возрастанию
+  desc: По убыванию
+  created_on: Дата создания
+  theme: Название темы
+  number_task: Номер задачи
+
+Redmine email: Email от Redmine
+Redmine password: Пароль от Redmine
+Evo login: Логин от Evo
+Evo password: Пароль от Evo
+Project: Название проект из Redmine
+Choose an value: Выберите вариант
+Task statuses: Статусы задач в Redmine
+Task from date: Дата создания задачи в Redmine от
+Task to date: Дата создания задачи в Redmine до
+Report from date: Дата проставленя трудозатрат в Redmine/Evo от
+Report to date: Дата проставления трудозатрат в Redmine/Evo до
+Field for sort: Поле для сортировки
+Type sort: Порядок сортировки
+Display tasks without time: Показать задачи без трудозатрат за заданный период
+Display total time: Показать столбцы "Затраты за все время"
+Display total time for task without redmine: Показать столбец "Затраты за все время" для задачи без номера из Redmine
