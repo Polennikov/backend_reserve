@@ -14,11 +14,11 @@ use Psr\Log\LoggerInterface;
 
 class ReportService
 {
-    private LoggerInterface  $logger;
+    private $logger;
 
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
-    private ClientEvo $clientEvo;
+    private $clientEvo;
 
     public function __construct(
         ManagerRegistry $doctrine,

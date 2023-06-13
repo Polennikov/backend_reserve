@@ -11,7 +11,7 @@ class StatusesResponse extends SuccessResponse
      * @var StatusesDTO[]
      *
      */
-    public ?array $statuses;
+    public $statuses;
 
     public function __construct(bool $success, array $statuses)
     {

@@ -10,7 +10,7 @@ class ReserveResponse extends SuccessResponse
     /**
      * @var ReserveDTO[]
      */
-    public ?array $reserve;
+    public $reserve;
 
     public function __construct(bool $success, array $reserve)
     {

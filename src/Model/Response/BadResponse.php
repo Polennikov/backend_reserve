@@ -11,13 +11,13 @@ class BadResponse
      * @var bool
      * @OA\Property(example="false")
      */
-    public bool $success;
+    public $success;
 
     /**
      * @var string
      * @OA\Property(example="Ошибка...")
      */
-    public string $message;
+    public $message;
 
     /**
      * BadResponse constructor.

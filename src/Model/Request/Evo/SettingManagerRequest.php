@@ -2,30 +2,31 @@
 
 namespace App\Model\Request\Evo;
 
-use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation as Serialization;
 use OpenApi\Annotations as OA;
+
 class SettingManagerRequest
 {
     /**
      * @var int
-     * @Serializer\Type("int")
-     * @Serializer\SerializedName("countMonth")
+     * @Serialization\Type("int")
+     * @Serialization\SerializedName("countMonth")
      * @OA\Property(description="Кол-во месяцев на вкладке", example="2")
      */
-    public int $countMonth;
+    public $countMonth;
 
     /**
      * @var string|null
-     * @Serializer\Type("string")
-     * @Serializer\SerializedName("projectsSidebar")
+     * @Serialization\Type("string")
+     * @Serialization\SerializedName("projectsSidebar")
      * @OA\Property(description="Выбранные проекты ", example="[]")
      */
-    public ?string $projectsSidebar;
+    public $projectsSidebar;
 
     /**
      * @var string|null
-     * @Serializer\Type("string")
+     * @Serialization\Type("string")
      * @OA\Property(description="Имя менеджера", example="Иван Иванов")
      */
-    public ?string $name;
+    public $name;
   }

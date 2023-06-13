@@ -10,42 +10,42 @@ class ReportDTO
      * @var int|null
      * @OA\Property(description="id", example="1")
      */
-    public ?int $idTask;
+    public $idTask;
 
     /**
      * @var EmployerTaskDTO[]|null
      * @OA\Property(description="Задачи")
      *
      */
-    public ?array $employerTask;
+    public $employerTask;
 
     /**
      * @var string|null
      * @OA\Property(description="Всего часов Rm", example="24")
      */
-    public ?string $hoursAllRm;
+    public $hoursAllRm;
 
     /**
      * @var string|null
      * @OA\Property(description="Всего часов Evo", example="25")
      */
-    public ?string $hoursAllEvo;
+    public $hoursAllEvo;
 
     /**
      * @var string|null
      * @OA\Property(description="Оценка RM", example="25")
      */
-    public ?string $redmineEstimate;
+    public $redmineEstimate;
 
     /**
      * @var string|null
      * @OA\Property(description="Начало периода", example="01.01.2022")
      */
-    public ?string $dateFrom;
+    public $dateFrom;
 
     /**
      * @var string|null
      * @OA\Property(description="Конец периода", example="01.11.2022")
      */
-    public ?string $dateTo;
+    public $dateTo;
 }

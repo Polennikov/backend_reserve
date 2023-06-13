@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\EvoDTO\EmployerDTO;
+use App\Model\MockData;
 use App\Model\Response\SettingEmployerResponse;
 use App\Model\SettingEmployerDTO;
 use App\Service\ClientBitrix;
@@ -27,17 +28,19 @@ use App\Model\Response\Evo\EmployerResponse;
  */
 class EmployerController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
-    private ClientEvo $clientEvo;
+    private $clientEvo;
 
-    private ClientBitrix $clientBitrix;
+    private $clientBitrix;
 
-    private DataOperationService $resourceController;
+    private $resourceController;
 
-    private LoggerInterface  $evoApiLogger;
+    private $evoApiLogger;
 
-    private LoggerInterface  $bitrixApiLogger;
+    private $bitrixApiLogger;
+
+    private $mockData;
 
     public function __construct(
         ManagerRegistry $doctrine,
@@ -45,7 +48,8 @@ class EmployerController extends AbstractController
         ClientBitrix $clientBitrix,
         DataOperationService $resourceController,
         LoggerInterface  $evoApiLogger,
-        LoggerInterface  $bitrixApiLogger
+        LoggerInterface  $bitrixApiLogger,
+        MockData  $mockData
     ) {
         $this->doctrine = $doctrine;
         $this->clientEvo = $clientEvo;
@@ -53,6 +57,7 @@ class EmployerController extends AbstractController
         $this->resourceController = $resourceController;
         $this->evoApiLogger = $evoApiLogger;
         $this->bitrixApiLogger = $bitrixApiLogger;
+        $this->mockData = $mockData;
         $this->clientEvo->setLogger($this->evoApiLogger);
         $this->clientBitrix->setLogger($this->bitrixApiLogger);
     }
@@ -112,6 +117,9 @@ class EmployerController extends AbstractController
             }
         }
         $employersArray = [];
+        //test
+        $listEmployers = $this->mockData->getEmployer();
+        //test
         foreach ($listEmployers as $data) {
             $employerDto = new EmployerDTO();
             $employerDto->id = $data['id'];
@@ -174,6 +182,9 @@ class EmployerController extends AbstractController
         }
 
         $employersArray = [];
+        //test
+        $evoAnswer['data'] = $this->mockData->getEmployer();
+        //test
         foreach ($evoAnswer['data'] as $employer) {
             if ($employer['competence'] == $competence) {
                 $employerDto = new EmployerDTO();
@@ -244,6 +255,7 @@ class EmployerController extends AbstractController
         ];
 
         $evoAnswerEmployer = $this->clientEvo->getEmployer($parameters);
+
         if (!empty($evoAnswerEmployer['status'])) {
             return new JsonResponse(new BadResponse(false, $evoAnswerEmployer['status']), JsonResponse::HTTP_BAD_REQUEST);
         }
@@ -260,10 +272,15 @@ class EmployerController extends AbstractController
                 }
             }
         }*/
-      /*  foreach ($evoAnswerEmployer['data'] as &$data) {
+
+        //test
+        $evoAnswerEmployer['data'] = $this->mockData->getEmployer();
+        //test
+
+       foreach ($evoAnswerEmployer['data'] as &$data) {
             $data['settings'] = $this->resourceController->getEmployerSetting($this->doctrine, $data['id']) ?? null;
             $data['lidProjectId'] = $this->resourceController->getProjectLidId($this->doctrine, $data['id']) ?? null;
-        }*/
+        }
 
         $employers = [];
 
@@ -279,7 +296,11 @@ class EmployerController extends AbstractController
         ];
 
         $evoAnswerTask = $this->clientEvo->getTask($parameters);
-        return new JsonResponse('f', JsonResponse::HTTP_OK);
+
+        //test
+        $evoAnswerTask['data'] = $this->mockData->getTaskFilter($month, $year, $projectId);
+        //test
+
         if (!empty($evoAnswerTask['status'])) {
             return new JsonResponse(new BadResponse(false, $evoAnswerTask['status']), JsonResponse::HTTP_BAD_REQUEST);
         }
@@ -305,6 +326,7 @@ class EmployerController extends AbstractController
         }
 
         $employersArray = [];
+
         foreach ($employers as $employer) {
             foreach ($evoAnswerEmployer['data'] as $dataEmployer) {
                 if ($dataEmployer['id'] == $employer) {

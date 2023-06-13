@@ -19,7 +19,7 @@ class TaskDTO
      * @Serializer\Type("int")
      * @Serializer\SerializedName("id")
      */
-    public ?int $id;
+    public $id;
 
     /**
      * @var ProjectDTO|null
@@ -75,7 +75,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("subject")
      */
-    public ?string $subject;
+    public $subject;
 
     /**
      * @var string|null
@@ -83,7 +83,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("description")
      */
-    public ?string $description;
+    public $description;
 
     /**
      * @var string|null
@@ -91,7 +91,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("start_date")
      */
-    public ?string $start_date;
+    public $start_date;
 
     /**
      * @var string|null
@@ -99,7 +99,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("due_date")
      */
-    public ?string $due_date;
+    public $due_date;
 
     /**
      * @var int|null
@@ -107,7 +107,7 @@ class TaskDTO
      * @Serializer\Type("int")
      * @Serializer\SerializedName("done_ratio")
      */
-    public ?int $done_ratio;
+    public $done_ratio;
 
     /**
      * @var string|null
@@ -115,7 +115,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("is_private")
      */
-    public ?string $is_private;
+    public $is_private;
 
     /**
      * @var string|null
@@ -123,7 +123,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("estimated_hours")
      */
-    public ?string $estimated_hours;
+    public $estimated_hours;
 
     /**
      * @var string|null
@@ -131,7 +131,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("created_on")
      */
-    public ?string $created_on;
+    public $created_on;
 
     /**
      * @var string|null
@@ -139,7 +139,7 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("updated_on")
      */
-    public ?string $updated_on;
+    public $updated_on;
 
     /**
      * @var string|null
@@ -147,5 +147,5 @@ class TaskDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("closed_on")
      */
-    public ?string $closed_on;
+    public $closed_on;
 }

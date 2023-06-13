@@ -13,7 +13,7 @@ class TaskEditRequest
      * @Serializer\Type("string")
      * @Serializer\SerializedName("taskId")
      */
-    public string $taskId;
+    public $taskId;
 
     /**
      * @var string
@@ -21,14 +21,14 @@ class TaskEditRequest
      * @Serializer\Type("string")
      * @Serializer\SerializedName("reportId")
      */
-    public string $reportId;
+    public $reportId;
 
     /**
      * @var string
      * @Serializer\Type("string")
      * @Serializer\SerializedName("reportId")
      */
-    public string $projectEvo;
+    public $projectEvo;
 
     /**
      * @var string
@@ -36,7 +36,7 @@ class TaskEditRequest
      * @Serializer\Type("string")
      * @Serializer\SerializedName("dateTo")
      */
-    public string $dateTo;
+    public $dateTo;
 
     /**
      * @var string
@@ -44,5 +44,5 @@ class TaskEditRequest
      * @Serializer\Type("string")
      * @Serializer\SerializedName("dateFrom")
      */
-    public string $dateFrom;
+    public $dateFrom;
 }

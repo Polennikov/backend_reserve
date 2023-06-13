@@ -11,5 +11,5 @@ class LidProjectDTO
      * @var int|null
      * @OA\Property(description="Кол-во отображвемых месяцев", example="1")
      */
-    public ?int $hoursWork;
+    public $hoursWork;
 }

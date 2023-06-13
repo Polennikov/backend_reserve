@@ -9,7 +9,7 @@ class ManagerResponse extends SuccessResponse
     /**
      * @var ManagerDTO[]|null
      */
-    public ?array $manager;
+    public $manager;
 
     public function __construct(bool $success, array $manager)
     {

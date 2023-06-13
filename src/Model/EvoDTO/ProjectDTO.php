@@ -11,24 +11,24 @@ class ProjectDTO
      * @var int|null
      * @OA\Property(description="id", example="1")
      */
-    public ?int $id;
+    public $id;
 
     /**
      * @var string|null
      * @OA\Property(description="Название",example="Acer")
      */
-    public ?string $title;
+    public $title;
 
     /**
      * @var string|null
      * @OA\Property(description="redmine_url", example="...")
      *
      */
-    public ?string $redmine_url;
+    public $redmine_url;
 
     /**
      * @var string|null
      * @OA\Property(description="Статус", example="завершение")
      */
-    public ?string $status;
+    public $status;
 }

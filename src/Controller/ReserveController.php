@@ -24,7 +24,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  */
 class ReserveController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
     public function __construct(
         ManagerRegistry $doctrine

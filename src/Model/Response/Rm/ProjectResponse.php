@@ -11,7 +11,7 @@ class ProjectResponse extends SuccessResponse
      * @var ProjectDTO[]|null
      *
      */
-    public ?array $projects;
+    public $projects;
 
     public function __construct(bool $success, array $projects)
     {

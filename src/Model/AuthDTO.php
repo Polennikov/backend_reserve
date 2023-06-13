@@ -2,27 +2,29 @@
 
 namespace App\Model;
 
-use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation as Serialization;
 use OpenApi\Annotations as OA;
 
 class AuthDTO
 {
     /**
      * @var string|null
+     * @Serialization\Type("string")
      * @OA\Property(description="Логин", example="login")
      */
-    public ?string $login;
+    public $login;
 
     /**
      * @var string|null
+     * @Serialization\Type("string")
      * @OA\Property(description="Пароль",example="password")
      */
-    public ?string $password;
+    public $password;
 
     /**
      * @var string|null
      * @OA\Property(description="Токен", example="token")
      *
      */
-    public ?string $token;
+    public $token;
 }

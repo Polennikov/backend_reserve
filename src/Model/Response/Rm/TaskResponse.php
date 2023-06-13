@@ -11,7 +11,7 @@ class TaskResponse extends SuccessResponse
      * @var TaskDTO[]|null
      *
      */
-    public ?array $tasks;
+    public $tasks;
 
     public function __construct(bool $success, array $tasks)
     {

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\SettingProject;
+use App\Model\MockData;
 use App\Model\Response\BadResponse;
 use App\Model\Response\SettingProjectResponse;
 use App\Model\SettingProjectDTO;
@@ -22,21 +23,25 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  */
 class ProjectController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
-    private ClientEvo $clientEvo;
+    private $clientEvo;
 
-    private LoggerInterface  $logger;
+    private $logger;
+
+    private $mockData;
 
     public function __construct(
         ManagerRegistry $doctrine,
         ClientEvo $clientEvo,
-        LoggerInterface  $evoApiLogger
+        LoggerInterface  $evoApiLogger,
+        MockData $mockData
     ) {
         $this->doctrine = $doctrine;
         $this->clientEvo = $clientEvo;
         $this->logger = $evoApiLogger;
         $this->clientEvo->setLogger($this->logger);
+        $this->mockData = $mockData;
     }
 
     /**
@@ -68,6 +73,10 @@ class ProjectController extends AbstractController
         if (empty($evoAnswer['data'])) {
             return new JsonResponse(new BadResponse(false, $evoAnswer['status']), JsonResponse::HTTP_BAD_REQUEST);
         }
+
+        //test
+        $evoAnswer['data'] = $this->mockData->getProject();
+        //test
 
         $projectResponse = new ProjectResponse(true);
         $projectResponse->projects = $evoAnswer['data'];

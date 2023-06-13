@@ -9,7 +9,7 @@ class SettingManagerResponse extends SuccessResponse
     /**
      * @var SettingManagerDTO|null
      */
-    public ?SettingManagerDTO $setting;
+    public $setting;
 
     public function __construct(bool $success, SettingManagerDTO $setting)
     {

@@ -11,13 +11,13 @@ class SetReserveResponse extends SuccessResponse
      * @var float|null
      * @OA\Property(description="Процент", example="10")
      */
-    public ?float $percent;
+    public $percent;
 
     /**
      * @var HistoryDTO[]|null
      * @OA\Property(description="История")
      */
-    public ?array $history;
+    public $history;
 
     public function __construct(bool $success, float $percent, array $history)
     {

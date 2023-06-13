@@ -10,5 +10,5 @@ class EmployerResponse extends SuccessResponse
     /**
      * @var EmployerDTO[]
      */
-    public ?array $employers;
+    public $employers;
 }

@@ -9,5 +9,5 @@ class ProjectResponse extends SuccessResponse
     /**
      * @var ProjectDTO[]
      */
-    public ?array $projects;
+    public $projects;
 }

@@ -11,31 +11,31 @@ class ProjectDTO
      * @var int|null
      * @OA\Property(description="id", example="1")
      */
-    public ?int $id;
+    public $id;
 
     /**
      * @var string
      * @OA\Property(description="Название проекта")
      */
-    public ?string $name;
+    public $name;
 
     /**
      * @var string|null
      * @OA\Property(description="Идентификатор", example="24")
      */
-    public ?string $identifier;
+    public $identifier;
 
     /**
      * @var string|null
      * @OA\Property(description="Описание", example="25")
      */
-    public ?string $description;
+    public $description;
 
     /**
      * @var int|null
      * @OA\Property(description="Статус", example="25")
      */
-    public ?int $status;
+    public $status;
 
     /**
      * @var string|null
@@ -44,7 +44,7 @@ class ProjectDTO
      * @Serializer\SerializedName("is_public")
      * @OA\Property(description="Начало периода", example="01.01.2022")
      */
-    public ?string $is_public;
+    public $is_public;
 
     /**
      * @var string|null
@@ -53,7 +53,7 @@ class ProjectDTO
      * @Serializer\SerializedName("created_on")
      * @OA\Property(example="01.11.2022")
      */
-    public ?string $created_on;
+    public $created_on;
 
     /**
      * @var string|null
@@ -62,5 +62,5 @@ class ProjectDTO
      * @Serializer\SerializedName("updated_on")
      * @OA\Property(example="01.11.2022")
      */
-    public ?string $updated_on;
+    public $updated_on;
 }

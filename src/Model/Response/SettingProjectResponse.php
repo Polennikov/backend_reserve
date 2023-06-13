@@ -9,7 +9,7 @@ class SettingProjectResponse extends SuccessResponse
     /**
      * @var SettingProjectDTO
      */
-    public SettingProjectDTO $setting;
+    public $setting;
 
     public function __construct(bool $success, SettingProjectDTO $setting)
     {

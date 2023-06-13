@@ -11,40 +11,40 @@ class SpendingDTO
      * @OA\Property(description="month", example="11")
      *
      */
-    public ?string $month;
+    public $month;
 
     /**
      * @var string|null
      * @OA\Property(description="year", example="2022")
      *
      */
-    public ?string $year;
+    public $year;
 
     /**
      * @var string|null
      * @OA\Property(description="hoursEvo", example="13")
      *
      */
-    public ?string $hoursEvo;
+    public $hoursEvo;
 
     /**
      * @var string|null
      * @OA\Property(description="hoursRm", example="12")
      *
      */
-    public ?string $hoursRm;
+    public $hoursRm;
 
     /**
      * @var string|null
      * @OA\Property(description="employerName", example="Иванов Иван Иванович")
      *
      */
-    public ?string $employerName;
+    public $employerName;
 
     /**
      * @var string|null
      * @OA\Property(description="employerId", example="12")
      *
      */
-    public ?string $employerId;
+    public $employerId;
 }

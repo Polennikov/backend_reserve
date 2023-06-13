@@ -11,12 +11,12 @@ class ResourceResponse extends SuccessResponse
     /**
      * @var FactDTO[]
      */
-    public ?array $freeTime;
+    public $freeTime;
 
     /**
      * @var PlanResourceDTO[]
      */
-    public ?array $planPercent;
+    public $planPercent;
 
     public function __construct(bool $success, array $freeTime, array $planPercent)
     {

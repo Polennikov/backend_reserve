@@ -15,11 +15,10 @@ use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Tochka\Calendar\WorkCalendar;
-use Vasyag07\Bitrix24Client\Client;
 
 class DataOperationService extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
     public function setDoctrine($doctrine)
     {
@@ -29,7 +28,7 @@ class DataOperationService extends AbstractController
     public function getFactEmployerMonth($evoAnswer)
     {
         $projectsHours = [];
-        $factDTOArray = [];
+        $projectFact = [];
 
         if (!empty($evoAnswer) && is_array($evoAnswer['data'])) {
             foreach ($evoAnswer['data'] as $task) {
@@ -41,12 +40,51 @@ class DataOperationService extends AbstractController
             }
         }
         foreach ($projectsHours as $projectId => $hours) {
-            $factDTO = new FactDTO();
-            $factDTO->id = $projectId;
-            $factDTO->hour = round($hours, 2);
-            $factDTOArray[] = $factDTO;
+            $projectFact[$projectId] = [
+                'hours' => round($hours, 2),
+            ];
         }
-        return $factDTOArray;
+        return $projectFact;
+    }
+
+    public function getPlanEmployerMonth($reservations, $reservationChangeRepository)
+    {
+        $arReservations = [];
+        foreach ($reservations as $reservation) {
+            $changes = $reservationChangeRepository->findBy([
+                'entry' => $reservation,
+            ]);
+            $history = [];
+            if (!empty($changes) && is_array($changes)) {
+                foreach ($changes as $reservationChange) {
+                    $history[] = [
+                        'new' => $reservationChange->getNewValue(),
+                        'old' => $reservationChange->getOldValue(),
+                        'date' => $reservationChange->getChangeTime()->format('d.m.Y H:i:s'),
+                    ];
+                }
+            }
+            $history = array_reverse($history);
+            if (empty($arReservations[$reservation->getProjectId()])) {
+                $arReservations[$reservation->getProjectId()] = [];
+            }
+            $arReservations[$reservation->getProjectId()][$reservation->getManager()->getId()] = [
+                'percent' => $reservation->getPercent(),
+                'history' => $history,
+            ];
+            if (empty($arReservations[$reservation->getProjectId()]['allPercent'])) {
+                $arReservations[$reservation->getProjectId()]['allPercent'] = 0;
+            }
+
+            $arReservations[$reservation->getProjectId()]['allPercent'] += $reservation->getPercent();
+        }
+        return $arReservations;
+    }
+
+    public function getCalendar($from, $to, array $user)
+    {
+
+        return [];
     }
 
     public function getArrayPlanDTO($reservations)
@@ -77,7 +115,7 @@ class DataOperationService extends AbstractController
             $planDTO->project = $reservation->getProjectId();
             $planDTO->dateReserve = $reservation->getDateReservation()->format('d.m.Y H:i:s');
             $planDTO->history = $historyDTOArray;
-            $planDTOArray[] = $planDTO;
+            $planDTOArray[$reservation->getProjectId()] = $planDTO;
         }
         return $planDTOArray;
     }
@@ -108,21 +146,57 @@ class DataOperationService extends AbstractController
 
     public function getFactMonthData($dataQuery)
     {
-        $factDTOArray = [];
+        $mass = [];
         $uniqEmployers = array_unique_key($dataQuery, 'employer_id');
         foreach ($uniqEmployers as $employer) {
+            $mass[$employer] = [];
             $hoursEmployer = 0;
-            $factDTO = new FactDTO();
-            $factDTO->id = $employer;
             foreach ($dataQuery as $taskEmployer) {
                 if ($employer == $taskEmployer['employer_id']) {
                     $hoursEmployer += $taskEmployer['time'];
                 }
             }
-            $factDTO->hour = $hoursEmployer;
-            $factDTOArray[] = $factDTO;
+            $mass[$employer] = $hoursEmployer;
         }
-        return $factDTOArray;
+        return $mass;
+    }
+
+    public function getPlanMonthData($projectId, $month, $year, $doctrine)
+    {
+        $reservationChangeRepository = $doctrine->getRepository(ReservationChange::class);
+        $reservationRepository = $doctrine->getRepository(Reservation::class);
+
+        $Reservations = [];
+        $reservations = $reservationRepository->findBy([
+            'projectId' => $projectId,
+            'year' => $year,
+            'month' => (int)$month,
+        ]);
+        foreach ($reservations as $reservation) {
+            $history = [];
+            $changes = $reservationChangeRepository->findBy([
+                'entry' => $reservation->getId(),
+            ]);
+            if (!empty($changes) && is_array($changes)) {
+                foreach ($changes as $reservationChange) {
+                    $history[] = [
+                        'new' => $reservationChange->getNewValue(),
+                        'old' => $reservationChange->getOldValue(),
+                        'date' => $reservationChange->getChangeTime()->format('d.m.Y H:i:s'),
+                    ];
+                }
+            }
+            $history = array_reverse($history);
+            if (empty($Reservations[$reservation->getEmployerId()])) {
+                $Reservations[$reservation->getEmployerId()] = [];
+            }
+            $Reservations[$reservation->getEmployerId()][$reservation->getManager()->getId()] = [
+                'percent' => $reservation->getPercent(),
+                'dateReserve' => $reservation->getDateReservation(),
+                'history' => $history,
+            ];
+        }
+        return $Reservations;
     }
 
     function getEmployerSetting($doctrine, $id)

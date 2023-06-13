@@ -34,27 +34,27 @@ class Task
      * @Serializer\Type("float")
      * @Serializer\SerializedName("redmineEstimate")
      */
-    private ?float $redmineEstimate;
+    private $redmineEstimate;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private ?float $redmineTotalSpend;
+    private $redmineTotalSpend;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private ?float $evoTotalSpend;
+    private $evoTotalSpend;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private ?int $redmineId;
+    private $redmineId;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private ?int $taskId;
+    private $taskId;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)

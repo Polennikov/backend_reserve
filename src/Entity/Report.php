@@ -80,7 +80,7 @@ class Report
      * @Serializer\Type("array|null")
      * @Serializer\SerializedName("filterSettings")
      */
-    private ?array $filterSettings = [];
+    private $filterSettings = [];
 
     public function __construct()
     {

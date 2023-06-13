@@ -7,7 +7,7 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Vasyag07\Bitrix24Client\Client;
+//use Vasyag07\Bitrix24Client\Client;
 
 class ClientBitrix extends AbstractController
 {
@@ -17,15 +17,15 @@ class ClientBitrix extends AbstractController
 
     public function __construct()
     {
-        $this->client = new Client($_ENV['BITRIX24_BASE_URL'], $_ENV['BITRIX24_ID_MANAGER'], $_ENV['BITRIX24_API_KEY']);
+        //$this->client = new Client($_ENV['BITRIX24_BASE_URL'], $_ENV['BITRIX24_ID_MANAGER'], $_ENV['BITRIX24_API_KEY']);
     }
 
     public function getEmployers() {
-        return $this->bitrixApiRequest($this->client->user->getAll(), __METHOD__);
+        //return $this->bitrixApiRequest($this->client->user->getAll(), __METHOD__);
     }
 
     public function getCalendar($from, $to, array $user) {
-        return $this->bitrixApiRequest($this->client->calendar->getAccessibilityList(new \DateTime($from), new \DateTime($to), $user), __METHOD__);
+        //return $this->bitrixApiRequest($this->client->calendar->getAccessibilityList(new \DateTime($from), new \DateTime($to), $user), __METHOD__);
     }
 
     public function bitrixApiRequest($response, $method)

@@ -27,17 +27,17 @@ class Manager
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $tokenRm;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $loginRm;
+    private $roleUser;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $competence;
 
     /**
      * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="manager")
@@ -66,14 +66,14 @@ class Manager
         return $this;
     }
 
-    public function getTokenRm(): ?string
+    public function getRoleUser(): ?string
     {
-        return $this->tokenRm;
+        return $this->roleUser;
     }
 
-    public function setTokenRm(string $tokenRm): self
+    public function setRoleUser(string $roleUser): self
     {
-        $this->tokenRm = $tokenRm;
+        $this->roleUser = $roleUser;
 
         return $this;
     }
@@ -86,6 +86,18 @@ class Manager
     public function setLogin(?string $login): self
     {
         $this->login = $login;
+
+        return $this;
+    }
+
+    public function getCompetence(): ?string
+    {
+        return $this->competence;
+    }
+
+    public function setCompetence(?string $competence): self
+    {
+        $this->competence = $competence;
 
         return $this;
     }

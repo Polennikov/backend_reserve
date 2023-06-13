@@ -12,7 +12,7 @@ class AssignedDTO
      * @Serializer\Type("int")
      * @Serializer\SerializedName("id")
      */
-    public ?int $id;
+    public $id;
 
     /**
      * @var string|null
@@ -20,5 +20,5 @@ class AssignedDTO
      * @Serializer\Type("string")
      * @Serializer\SerializedName("name")
      */
-    public ?string $name;
+    public $name;
 }

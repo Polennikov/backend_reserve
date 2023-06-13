@@ -14,37 +14,37 @@ class InfoEmployerResponse extends SuccessResponse
      * @var float|null
      * @OA\Property(description="Свободный процент", example="10")
      */
-    public ?float $freePercent;
+    public $freePercent;
 
     /**
      * @var float|null
      * @OA\Property(description="Свободные часы", example="20")
      */
-    public ?float $freeHours;
+    public $freeHours;
 
     /**
      * @var float|null
      * @OA\Property(description="Рабочие дни", example="21")
      */
-    public ?float $workingDays;
+    public $workingDays;
 
     /**
      * @var FactDTO[]|null
      * @OA\Property(description="Факт")
      */
-    public ?array $fact;
+    public $fact;
 
     /**
      * @var PlanDTO[]|null
      * @OA\Property(description="План")
      */
-    public ?array $plan;
+    public $plan;
 
     /**
      * @var CalendarDTO[]|null
      * @OA\Property(description="Календарь отпусков")
      */
-    public ?array $calendar;
+    public $calendar;
 
     public function __construct(bool $success)
     {

@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class RequestSignListener implements EventSubscriberInterface
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
     public function __construct(
         ManagerRegistry $doctrine
@@ -35,9 +35,9 @@ class RequestSignListener implements EventSubscriberInterface
                 '/api/doc/login' != substr($request->getPathInfo(), 0, 16) &&
                 strlen($request->getPathInfo()) > 8
             ) {
-                if (!$this->isRequest($request)) {
+               /* if (!$this->isRequest($request)) {
                     $event->setResponse(new JsonResponse('Access denied!', JsonResponse::HTTP_FORBIDDEN));
-                }
+                }*/
             }
         }
     }

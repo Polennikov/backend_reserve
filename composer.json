@@ -13,7 +13,8 @@
         "doctrine/doctrine-bundle": "^2.5",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.10",
-        "kbsali/redmine-api": "^2.2",
+        "easycorp/easyadmin-bundle": "^3.3",
+        "jms/serializer-bundle": "^5.2",
         "monolog/monolog": "^2.1",
         "nelmio/api-doc-bundle": "^4.9",
         "nelmio/cors-bundle": "^2.2",
@@ -34,8 +35,7 @@
         "symfony/twig-bundle": "5.4.*",
         "symfony/validator": "5.4.*",
         "symfony/yaml": "5.4.*",
-        "tochka-developers/work-calendar": "^2.2",
-        "vasyag07/bitrix24-client": "dev-main"
+        "tochka-developers/work-calendar": "^2.2"
     },
     "config": {
         "platform-check": false,

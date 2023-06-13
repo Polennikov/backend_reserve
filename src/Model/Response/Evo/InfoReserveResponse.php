@@ -13,37 +13,37 @@ class InfoReserveResponse extends SuccessResponse
      * @var float|null
      * @OA\Property(description="Свободный процент", example="10")
      */
-    public ?float $freePercent;
+    public $freePercent;
 
     /**
      * @var float|null
      * @OA\Property(description="Свободные часы", example="20")
      */
-    public ?float $freeHours;
+    public $freeHours;
 
     /**
      * @var float|null
      * @OA\Property(description="Занятый процент", example="90")
      */
-    public ?float $allReservePercent;
+    public $allReservePercent;
 
     /**
      * @var float|null
      * @OA\Property(description="Кол-во дней отпуска", example="14")
      */
-    public ?float $absentDays;
+    public $absentDays;
 
     /**
      * @var float|null
      * @OA\Property(description="Текущий процент менеджера", example="5")
      */
-    public ?float $managerReservePercent;
+    public $managerReservePercent;
 
     /**
      * @var CalendarDTO[]|null
      * @OA\Property(description="Календарь отпусков")
      */
-    public ?array $calendar;
+    public $calendar;
 
     public function __construct(bool $success)
     {

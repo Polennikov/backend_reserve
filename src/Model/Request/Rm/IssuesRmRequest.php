@@ -15,13 +15,13 @@ class IssuesRmRequest
      * @OA\Property(description="id Проекта RM", example="123")
      * @Serializer\SerializedName("project")
      */
-    public string $project;
+    public $project;
 
     /**
      * @var FiltersIssueDTO $filter
      * @Serializer\SerializedName("filter")
      */
-    public FiltersIssueDTO $filter;
+    public $filter;
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {

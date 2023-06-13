@@ -26,9 +26,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ManagersController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
-    private ValidatorInterface  $validator;
+    private $validator;
 
     public function __construct(
         ManagerRegistry $doctrine,
@@ -56,26 +56,23 @@ class ManagersController extends AbstractController
         $managerRepository = $this->doctrine->getRepository(Manager::class);
         $managerSettingRepository = $this->doctrine->getRepository(SettingManager::class);
 
-        $managersArray = [];
+        $arManagers = [];
         $managers = $managerRepository->findAll();
         foreach ($managers as $manager) {
-
             $settingManager = $managerSettingRepository->findOneBy([
                 'manager' => $manager->getId(),
             ]);
-
-            $managerName = null;
-            if (isset($settingManager)) {
-                $managerName = $settingManager->getFullName();
-            }
-            $managerDTO = new ManagerDTO();
-            $managerDTO->id = $manager->getId();
-            $managerDTO->login = $manager->getLogin();
-            $managerDTO->managerName = $managerName;
-            $managersArray [] = $managerDTO;
+            $arManagers[$manager->getId()] = [
+                'login' => $manager->getLogin(),
+                'managerName' =>  isset($settingManager) ? $settingManager->getFullName() : '',
+            ];
         }
+        $dataResponse = [
+            'success' => true,
+            'managers' => $arManagers,
+        ];
 
-        return new JsonResponse(new ManagerResponse(true, $managersArray), JsonResponse::HTTP_OK);
+        return new JsonResponse($dataResponse, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -164,12 +161,13 @@ class ManagersController extends AbstractController
         $settingManager = $settingRepository->findOneBy([
             'manager' => $id,
         ]);
+        //print_r($settingManagerRequest);
         try {
             if (empty($settingManager)) {
                 $settingManager = new SettingManager();
                 $managerRepository = $this->doctrine->getRepository(Manager::class);
                 $manager = $managerRepository->findOneBy([
-                    'token' => $bearerToken,
+                    'id' => $id,
                 ]);
                 $settingManager->setManager($manager);
             }
@@ -177,6 +175,7 @@ class ManagersController extends AbstractController
                 $settingManager->setCountMonth($settingManagerRequest->countMonth);
             }
             if (isset($settingManagerRequest->projectsSidebar)) {
+                //print_r($settingManagerRequest->projectsSidebar);
                 $settingManager->setProjectsSidebar($settingManagerRequest->projectsSidebar);
             }
             if (isset($settingManagerRequest->name)) {

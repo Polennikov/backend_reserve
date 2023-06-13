@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\ApprovedPlan;
+use App\Entity\Plan;
 use App\Entity\Reservation;
+use App\Entity\ReservationChange;
 use App\Model\EvoDTO\CalendarDTO;
 use App\Model\EvoDTO\FactDTO;
 use App\Model\EvoDTO\PlanResourceDTO;
 use App\Model\EvoDTO\ReserveDTO;
+use App\Model\MockData;
 use App\Model\Response\BadResponse;
 use App\Service\ClientBitrix;
 use App\Service\ClientEvo;
@@ -31,13 +35,15 @@ use App\Model\Response\Evo\ResourceResponse;
  */
 class ResourceDataController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
-    private ClientEvo $clientEvo;
+    private $clientEvo;
 
-    private ClientBitrix $clientBitrix;
+    private $clientBitrix;
 
-    private DataOperationService $resourceController;
+    private $resourceController;
+
+    private $mockData;
 
     /**
      * ResourceDataController constructor.
@@ -47,6 +53,7 @@ class ResourceDataController extends AbstractController
      * @param DataOperationService $resourceController
      * @param LoggerInterface $evoApiLogger
      * @param LoggerInterface $bitrixApiLogger
+     * @param MockData $mockData
      */
     public function __construct(
         ManagerRegistry $doctrine,
@@ -54,7 +61,8 @@ class ResourceDataController extends AbstractController
         ClientBitrix $clientBitrix,
         DataOperationService $resourceController,
         LoggerInterface  $evoApiLogger,
-        LoggerInterface  $bitrixApiLogger
+        LoggerInterface  $bitrixApiLogger,
+        MockData $mockData
     ) {
         $this->doctrine = $doctrine;
         $this->clientEvo = $clientEvo;
@@ -63,6 +71,7 @@ class ResourceDataController extends AbstractController
         $this->resourceController->setDoctrine($this->doctrine);
         $this->clientEvo->setLogger($evoApiLogger);
         $this->clientBitrix->setLogger($bitrixApiLogger);
+        $this->mockData = $mockData;
     }
 
     /**
@@ -140,7 +149,10 @@ class ResourceDataController extends AbstractController
             'limit' => 20000,
         ];
 
-        $evoAnswer = $this->clientEvo->getTask($parameters);
+        //$evoAnswer = $this->clientEvo->getTask($parameters);
+        //test
+        $evoAnswer['data'] = $this->mockData->getTaskFilterInfo($month, $year, $employerId);
+        //test
 
         $projectFact = $this->resourceController->getFactEmployerMonth($evoAnswer);
 
@@ -149,41 +161,52 @@ class ResourceDataController extends AbstractController
             'year' => $year,
             'month' => (int)$month,
         ]);
-        $arReservations = $this->resourceController->getArrayPlanDTO($reservations);
+        $reservationChangeRepository = $this->doctrine->getRepository(ReservationChange::class);
+        $arReservations = $this->resourceController->getPlanEmployerMonth($reservations, $reservationChangeRepository);
 
-        $dateFrom = new \DateTime($year . $month . '01');
-        $dateTo = (new \DateTime($year . $month . '01'))->modify('+1 month')->modify('-1 days');
+        $dateFrom = new DateTime($year . $month . '01');
+        $dateTo = (new DateTime($year . $month . '01'))->modify('+1 month')->modify('-1 days');
 
         $workingDays = $this->resourceController->getCountDaysPeriod($year, $month, $dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'));
 
-        if ($idB24 != 0) {
-            $calendar = $this->clientBitrix->getCalendar($dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'), [$idB24]);
-        }
 
+        /*if ($idB24 != 0) {
+            $calendar = $this->resourceController->getCalendar($dateFrom->format('Y-m-d'), $dateTo->format('Y-m-d'), [$idB24]);
+        }*/
         $reservationsData = $this->resourceController->getAllReserveEmployer($employerId, $month, $year, null, null, $this->doctrine);
 
         $absentDays = 0;
+
         if (isset($calendar)) {
             foreach ($calendar[$idB24] as $calendarItem) {
                 $absentDays = $this->resourceController->getCountDaysPeriod($year, $month, $calendarItem->dateFrom->format('Y-m-d'), $calendarItem->dateTo->format('Y-m-d'));
             }
-            $calendarDTOArray = $this->getCalendarEmployerId($calendar[$idB24]);
-        } else {
-            $calendarDTOArray = [];
         }
 
         $persentAllMonth = $this->resourceController->hoursOnPercent($settingHours * ($workingDays - $absentDays), $workingDays, $settingHours) - $reservationsData['allPercent'];
         $hoursAllMonth = $this->resourceController->percentOnHours($persentAllMonth, $workingDays, $settingHours);
 
-        $infoEmployerResponse = new InfoEmployerResponse(true);
-        $infoEmployerResponse->freePercent = $persentAllMonth;
-        $infoEmployerResponse->freeHours = $hoursAllMonth;
-        $infoEmployerResponse->calendar = $calendarDTOArray;
-        $infoEmployerResponse->plan = $arReservations;
-        $infoEmployerResponse->fact = $projectFact;
-        $infoEmployerResponse->workingDays = $workingDays;
+        if (isset($calendar)) {
+            foreach ($calendar[$idB24] as $item) {
+                $item->dateFrom = $item->dateFrom->format('d.m.Y');
+                $item->dateTo = $item->dateTo->format('d.m.Y');
+            }
+            $calendar = $calendar[$idB24];
+        } else {
+            $calendar = [];
+        }
+        $dataResponse = [
+            'workingDays' => $workingDays,
+            'success' => true,
+            'fact' => $projectFact,
+            'plan' => $arReservations,
+            'calendar' => $calendar,
+            'freePercent' => $persentAllMonth,
+            'freeHours' => $hoursAllMonth,
 
-        return new JsonResponse($infoEmployerResponse, JsonResponse::HTTP_OK);
+        ];
+        return new JsonResponse($dataResponse, JsonResponse::HTTP_OK);
+
     }
 
     /**
@@ -291,7 +314,6 @@ class ResourceDataController extends AbstractController
 
                 $freeTimeArray [] = $factDTO;
                 $planPercentArray [] = $planResourceDTO;
-
             }
         }
 
@@ -425,19 +447,163 @@ class ResourceDataController extends AbstractController
             'limit' => 20000,
         ];
 
-        $evoAnswer = $this->clientEvo->getTask($parameters);
+        //$evoAnswer = $this->clientEvo->getTask($parameters);
+        $evoAnswer['data'] = $this->mockData->getTaskFilter($month, $year, $projectId);
 
-        if (!empty($evoAnswer['status'])) {
-            return new JsonResponse(new BadResponse(false, $evoAnswer['status']), JsonResponse::HTTP_BAD_REQUEST);
+        $projectFact = $this->resourceController->getFactMonthData($evoAnswer['data']);
+        $ReservationsData = $this->resourceController->getPlanMonthData($projectId, $month, $year, $this->doctrine);
+
+        $dataResponse = [
+            'success' => true,
+            'fact' => $projectFact,
+            'plan' => $ReservationsData,
+        ];
+        return new JsonResponse($dataResponse, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Получение информации таблицы резерва проекта
+     *
+     * @Route("/reserve/plan", name="getReservePlan", methods={"GET"})
+     * @OA\Tag(name="ResourceData")
+     *
+     * @OA\Response(
+     *      response=200,
+     *       description="Success",
+     *       @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="success",
+     *                  type="boolean"
+     *              ),
+     *              @OA\Property(
+     *                  property="fact",
+     *                  type="object",
+     *                  @OA\Property(
+     *                      property="134",
+     *                      type="int",
+     *                      example="35",
+     *                  ),
+     *                  @OA\Property(
+     *                      property="135",
+     *                      type="int",
+     *                      example="35",
+     *                  )
+     *              ),
+     *              @OA\Property(
+     *                  property="plan",
+     *                  type="object",
+     *                  @OA\Property(
+     *                      property="134",
+     *                      type="object",
+     *                      @OA\Property(
+     *                          property="4",
+     *                          type="object",
+     *                          @OA\Property(
+     *                              property="percent",
+     *                              type="int",
+     *                              example="49",
+     *                          ),
+     *                          @OA\Property(
+     *                              property="dateReserve",
+     *                              type="string",
+     *                              example="13.06.2022 21:45:43",
+     *                          ),
+     *                          @OA\Property(
+     *                              property="history",
+     *                              type="array",
+     *                              @OA\Items(
+     *                                  @OA\Property(
+     *                                      property="new",
+     *                                      type="int",
+     *                                      example="20",
+     *                                  ),
+     *                                  @OA\Property(
+     *                                      property="old",
+     *                                      type="int",
+     *                                      example="80",
+     *                                  ),
+     *                                  @OA\Property(
+     *                                      property="date",
+     *                                      type="string",
+     *                                      example="25.07.2022 12:00:36",
+     *                                  )
+     *                              )
+     *                          )
+     *                      )
+     *                  )
+     *              )
+     *       )
+     *
+     *   ),
+     * @OA\Parameter(
+     *     name="project",
+     *     in="query",
+     *     description="Project id",
+     *     @OA\Schema(type="int")
+     * ),
+     * @OA\Parameter(
+     *     name="year",
+     *     in="query",
+     *     description="Year",
+     *     @OA\Schema(type="int")
+     * ),
+     * @OA\Parameter(
+     *     name="month",
+     *     in="query",
+     *     description="Month number",
+     *     @OA\Schema(type="int")
+     * )
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function getReservePlan(): JsonResponse
+    {
+        $request = Request::createFromGlobals();
+        $approvedPlanRepository = $this->doctrine->getRepository(ApprovedPlan::class);
+        $planRepository = $this->doctrine->getRepository(Plan::class);
+        $maskBearer = 'Bearer ';
+        $bearer = $request->headers->get('authorization');
+        $bearerToken = str_replace($maskBearer, "", $bearer);
+
+        $projectId = (int)$request->query->get('project');
+        $year = (int)$request->query->get('year');
+        $month = (int)$request->query->get('month');
+
+        $plans = $planRepository->findBy(['project' => $projectId]);
+        foreach ($plans as $plan) {
+            if ($plan->getStatus() == 'time') {
+
+            }
         }
 
-        $reservations = $reservationRepository->findBy([
-            'projectId' => $projectId,
-            'year' => $year,
-            'month' => (int)$month,
-        ]);
+
+        if (strlen((string)$month) === 1) {
+            $month = '0' . $month;
+        }
+
+        try {
+            $dateTo = (new \DateTime('01.' . $month . '.' . $year))->modify('+1 month');
+            $dateTo->modify('-1 day');
+        } catch (\Exception $e) {
+            return new JsonResponse(new BadResponse(false, 'Error dateTime param!'), JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $parameters = [
+            'token' => $bearerToken,
+            'filter[date][from]' => '01.' . $month . '.' . $year,
+            'filter[date][to]' => $dateTo->format('d.m.Y'),
+            'filter[project_id]' => $projectId,
+            'limit' => 20000,
+        ];
+        $plan = $planRepository->findOneBy(['project' => $projectId]);
+        if ($plan->getStatus() == 'time') {
+
+        }
+        //$evoAnswer = $this->clientEvo->getTask($parameters);
+        $evoAnswer['data'] = $this->mockData->getTaskFilter($month, $year, $projectId);
+
         $projectFact = $this->resourceController->getFactMonthData($evoAnswer['data']);
-        $ReservationsData = $this->resourceController->getArrayPlanDTO($reservations);
+        $ReservationsData = $this->resourceController->getPlanMonthData($projectId, $month, $year, $this->doctrine);
 
         $dataResponse = [
             'success' => true,
@@ -535,8 +701,7 @@ class ResourceDataController extends AbstractController
                 $reserveDTOArray->plan = $plan;
                 $arrayMonthReserve[] = $reserveDTOArray;
             }
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return new JsonResponse(new BadResponse(true, $e->getMessage()), JsonResponse::HTTP_BAD_REQUEST);
         }
         return new JsonResponse(new ReserveResponse(true, $arrayMonthReserve), JsonResponse::HTTP_OK);
@@ -600,11 +765,12 @@ class ResourceDataController extends AbstractController
      */
     public function getInfoSetReserve(): JsonResponse
     {
+        //$resourceController = new DataOperationController();
         $request = Request::createFromGlobals();
 
         $month = $request->query->get('month');
         $year = $request->query->get('year');
-        $idB24 = (int)$request->query->get('idB24');
+        $idB24 = $request->query->get('idB24');
         $employerId = $request->query->get('employer');
         $managerId = $request->query->get('manager');
         $projectId = $request->query->get('project');
@@ -614,36 +780,36 @@ class ResourceDataController extends AbstractController
         $date->modify('+1 month');
         $date->modify('-1 days');
 
-        $workingDays = $this->resourceController->getCountDaysPeriod($year, $month,$year . '-' . $month . '-' . '01', $date->format('Y-m-d'));
+        $workingDays = $this->resourceController->getCountDaysPeriod($year, $month, $year . '-' . $month . '-' . '01', $date->format('Y-m-d'));
 
-        if ($idB24 != 0) {
-            $calendar = $this->clientBitrix->getCalendar($year . '-' . $month . '-' . '01', $date->format('Y-m-d'), [$idB24]);
-        }
+        $calendar = $this->resourceController->getCalendar($year . '-' . $month . '-' . '01', $date->format('Y-m-d'), [$idB24]);
 
         $reservationsData = $this->resourceController->getAllReserveEmployer($employerId, $month, $year, $managerId, $projectId, $this->doctrine);
 
-        $absentDays = 0;
-        if (isset($calendar)) {
-            foreach ($calendar[$idB24] as $calendarItem) {
-                $absentDays = $this->resourceController->getCountDaysPeriod($year, $month, $calendarItem->dateFrom->format('Y-m-d'), $calendarItem->dateTo->format('Y-m-d'));
-            }
-            $calendarDTOArray = $this->getCalendarEmployerId($calendar[$idB24] );
-        } else {
-            $calendarDTOArray = [];
-        }
 
+        $absentDays = 0;
+        /*foreach ($calendar[$idB24] as $calendarItem) {
+            $absentDays = $this->resourceController->getCountDaysPeriod($year, $month, $calendarItem->dateFrom->format('Y-m-d'), $calendarItem->dateTo->format('Y-m-d'));
+        }*/
+        //print_r('res');
         $persentAllMonth = $this->resourceController->hoursOnPercent($settingHours * ($workingDays - $absentDays), $workingDays, $settingHours) - $reservationsData['allPercent'];
         $hoursAllMonth = $this->resourceController->percentOnHours($persentAllMonth, $workingDays, $settingHours);
 
-        $infoReserveResponse = new InfoReserveResponse(true);
-        $infoReserveResponse->calendar = $calendarDTOArray;
-        $infoReserveResponse->freeHours = $hoursAllMonth;
-        $infoReserveResponse->freePercent = $persentAllMonth;
-        $infoReserveResponse->absentDays = $absentDays;
-        $infoReserveResponse->allReservePercent = $reservationsData['allPercent'] ?? null;
-        $infoReserveResponse->managerReservePercent = $reservationsData['managerReservePercent'];
-
-        return new JsonResponse($infoReserveResponse,JsonResponse::HTTP_OK);
+       /* foreach ($calendar[$idB24] as $item) {
+            $item->dateFrom = $item->dateFrom->format('d.m.Y');
+            $item->dateTo = $item->dateTo->format('d.m.Y');
+        }*/
+//print_r('res');
+        $dataResponse = [
+            'success' => true,
+            'calendar' => '',
+            'absentDays' => $absentDays,
+            'freePercent' => $persentAllMonth,
+            'freeHours' => $hoursAllMonth,
+            'allReservePercent' => $reservationsData['allPercent'] ?? null,
+            'managerReservePercent' => $reservationsData['managerReservePercent']
+        ];
+        return new JsonResponse($dataResponse,JsonResponse::HTTP_OK);
     }
 
     /**
@@ -701,7 +867,7 @@ class ResourceDataController extends AbstractController
             'success' => true,
             'workingDays' => $workingDays,
         ];
-        return new JsonResponse($dataResponse,JsonResponse::HTTP_OK);
+        return new JsonResponse($dataResponse, JsonResponse::HTTP_OK);
     }
 
     /**
@@ -769,10 +935,11 @@ class ResourceDataController extends AbstractController
             'success' => true,
             'workingDays' => '$workingDays',
         ];
-        return new JsonResponse($dataResponse,JsonResponse::HTTP_OK);
+        return new JsonResponse($dataResponse, JsonResponse::HTTP_OK);
     }
 
-    public function getCalendarEmployerId($calendar) {
+    public function getCalendarEmployerId($calendar)
+    {
         $calendarDTOArray = [];
         foreach ($calendar as $item) {
             $calendarDTO = new CalendarDTO();

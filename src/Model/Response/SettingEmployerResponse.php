@@ -9,7 +9,7 @@ class SettingEmployerResponse extends SuccessResponse
     /**
      * @var SettingEmployerDTO
      */
-    public SettingEmployerDTO $setting;
+    public $setting;
 
     public function __construct(bool $success, SettingEmployerDTO $setting)
     {

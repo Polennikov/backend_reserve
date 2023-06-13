@@ -11,23 +11,23 @@ class ReserveDTO
      * @var int|null
      * @OA\Property(description="Месяц", example="11")
      */
-    public ?int $month;
+    public $month;
 
     /**
      * @var int|null
      * @OA\Property(description="Год", example="2022")
      */
-    public ?int $year;
+    public $year;
 
     /**
      * @var FactDTO[]|null
      * @OA\Property(description="Факт")
      */
-    public ?array $fact;
+    public $fact;
 
     /**
      * @var PlanDTO[]|null
      * @OA\Property(description="План (бронь)")
      */
-    public ?array $plan;
+    public $plan;
 }

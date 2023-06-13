@@ -10,12 +10,12 @@ class ReportDataResponse extends SuccessResponse
     /**
      * @var ReportDTO[]
      */
-    public array $report;
+    public $report;
 
     /**
      * @var string[]|null
      */
-    public array $dateInterval;
+    public $dateInterval;
 
     public function __construct(bool $success, array $report, $dateInterval)
     {

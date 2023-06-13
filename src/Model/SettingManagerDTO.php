@@ -11,17 +11,17 @@ class SettingManagerDTO
      * @var int|null
      * @OA\Property(description="Кол-во отображвемых месяцев", example="1")
      */
-    public ?int $countMonth;
+    public $countMonth;
 
     /**
      * @var string|null
      * @OA\Property(description="Кол-во отображвемых месяцев", example="1")
      */
-    public ?string $projectsSidebar;
+    public $projectsSidebar;
 
     /**
      * @var string|null
      * @OA\Property(description="ФИО менеджера", example="Иванов Иван Иванович")
      */
-    public ?string $name;
+    public $name;
 }

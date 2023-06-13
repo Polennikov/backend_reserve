@@ -2,15 +2,12 @@
 
 namespace App\Model\Response;
 
-use JMS\Serializer\Annotation as Serializer;
-
 class SuccessResponse
 {
     /**
      * @var bool
-     * @Serializer\Groups({"default"})
      */
-    public bool $success;
+    public $success;
 
     /**
      * SuccessResponse constructor.

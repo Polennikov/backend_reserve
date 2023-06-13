@@ -14,7 +14,7 @@ class FiltersIssueDTO
      * @Serializer\SerializedName("monthPaid")
      * @OA\Property(description="Дата оплаты", example="Март 2022")
      */
-    public ?string $monthPaid;
+    public $monthPaid;
 
     /**
      * @var int[]|null
@@ -22,21 +22,21 @@ class FiltersIssueDTO
      * @Serializer\SerializedName("statuses")
      * @OA\Property(description="Статусы проекта", example="[1, 2, 3]")
      */
-    public ?array $statuses;
+    public $statuses;
 
     /**
      * @Serializer\Type("string")
      * @Serializer\SerializedName("dateFrom")
      * @OA\Property(description="Начальная дата", example="2022-10-29")
      */
-    public string $dateFrom;
+    public $dateFrom;
 
     /**
      * @Serializer\Type("string")
      * @Serializer\SerializedName("dateTo")
      * @OA\Property(description="Конечная дата", example="2022-12-29")
      */
-    public string $dateTo;
+    public $dateTo;
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {

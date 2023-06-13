@@ -36,17 +36,17 @@ use App\Model\Request\Rm\IssuesRmRequest;
  */
 class ReportController extends AbstractController
 {
-    private ManagerRegistry $doctrine;
+    private $doctrine;
 
-    private ClientEvo $clientEvo;
+    private $clientEvo;
 
-    private TranslatorInterface $translator;
+    private $translator;
 
-    private ValidatorInterface  $validator;
+    private $validator;
 
-    private ReportService  $reportService;
+    private $reportService;
 
-    private LoggerInterface  $logger;
+    private $logger;
 
     public function __construct(
         TranslatorInterface $translator,
